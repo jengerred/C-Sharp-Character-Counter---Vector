@@ -148,6 +148,12 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
           description: 'Like checking your mailbox to see what letter is stored inside. The mailbox opens and you retrieve the character (represented by the letter).',
           action: 'Opening mailbox to retrieve letter...'
         };
+      case 'setCharacter(char)':
+        return {
+          title: 'Setting a Character',
+          description: 'Similar to placing a new letter in the mailbox. This method updates the character that this object represents, replacing any previous character with the new one provided.',
+          action: 'Placing new letter in mailbox...'
+        };
       default:
         return {
           title: 'Interactive UML Visualization',
@@ -163,6 +169,11 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
       isOpen: activeMethod === 'getCharacter(): char',
       hasLetter: true,
       position: [1, 0.2, -0.8] as [number, number, number]
+    },
+    setChar: {
+      isOpen: activeMethod === 'setCharacter(char)',
+      hasLetter: true,
+      position: [-1, 0.2, -0.8] as [number, number, number]
     }
   };
 
