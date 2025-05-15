@@ -169,24 +169,38 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1 className="text-3xl font-bold mb-6">Character Counter Using Vectors: A Complete Beginner's Guide</h1>
+        <h1 className="text-3xl font-bold mb-6">Character Counter Using ArrayList: A Complete Beginner's Guide</h1>
 
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Introduction: The Character Counting Challenge</h2>
           <div className="bg-gray-100 p-4 rounded-lg">
-            <p className="mb-4">In this tutorial, we'll build a program that reads an ASCII text file and counts the frequency of each character using a Vector data structure. Unlike our previous array-based solution, we'll use a more dynamic approach with Vectors, which can grow and shrink as needed. We'll be working with the provided wap.txt file, but our solution will work with any ASCII text file.
+            <p className="mb-4">In this tutorial, we'll build a program that reads an ASCII text file and counts the frequency of each character using an ArrayList data structure. Unlike our previous array-based solution, we'll use a more dynamic approach with ArrayList, which can grow and shrink as needed. We'll be working with the provided wap.txt file, but our solution will work with any ASCII text file.
 
-This project follows specific requirements: each unique character must be represented by a CharacterFrequency class instance, and these instances must be stored in a Vector (or ArrayList in C#). Additionally, we must process the file character by character - reading the entire file into memory at once is not allowed.
+This project follows specific requirements: each unique character must be represented by a CharacterFrequency class instance, and these instances must be stored in an ArrayList (or ArrayList in C#). Additionally, we must process the file character by character - reading the entire file into memory at once is not allowed.
 </p>
             
             <h3 className="font-bold mt-4">What Are We Building?</h3>
+            <div className="bg-blue-50 p-4 rounded-lg mb-4">
+              <p className="mb-2"><strong>Important Note:</strong> While this type of program would use Vector in C++ or Java, in C# we'll be using ArrayList. They serve the same purpose - a dynamic array that can grow or shrink as needed. Here's how they map across languages:</p>
+              <ul className="list-disc list-inside mb-2 pl-4">
+                <li>C++: <code className="bg-gray-100 px-1">std::vector</code></li>
+                <li>Java: <code className="bg-gray-100 px-1">java.util.Vector</code></li>
+                <li>C#: <code className="bg-gray-100 px-1">System.Collections.ArrayList</code></li>
+              </ul>
+            </div>
+            
             <h4 className="font-bold mt-2">Our program will:</h4>
             <ol className="list-disc list-inside mb-4">
-              <li>Read the input file (wap.txt) character by character</li>
-              <li>Store each unique character and its frequency in a Vector using our CharacterFrequency class</li>
-              <li>Create an output file showing each character, its ASCII value, and frequency count</li>
-              <li>Support command-line execution with input and output file parameters</li>
-              <li>Display the results in ASCII order (we'll explain what this means!)</li>
+              <li>Read any input text file character by character using StreamReader</li>
+              <li>Store each unique character and its frequency in an ArrayList using our CharacterFrequency class</li>
+              <li>Handle special cases for control characters (ASCII values below 32)</li>
+              <li>Support command-line arguments: program.exe inputFile outputFile</li>
+              <li>Write results to both console and output file showing:</li>
+              <ul className="list-none ml-8 mt-1">
+                <li>- Character and its ASCII value</li>
+                <li>- Number of times it appears in the file</li>
+                <li>- Special formatting for control characters</li>
+              </ul>
             </ol>
 <p>For example, if our input file contains just Hello., our output should look like:</p>
 
@@ -223,37 +237,88 @@ o(111) 1`}
             )}
 
             <h3 className="font-bold mt-2">Understanding the Core Concepts</h3>
-            <p><b>What is ASCII? Think of it as a Secret Decoder Ring! 🔍</b><br />
-Computers can't understand letters directly - they only understand numbers. ASCII is like a secret code that assigns a unique number to each character:
-</p>
-            <ul className="list-disc list-inside pl-4 mb-4">
-              <li>'A' = 65</li>
-              <li>'B' = 66</li>
-              <li>'a' = 97</li>
-              <li>'!' = 33</li>
-              <li>Space = 32</li>
-              <li>And so on...</li>
-            </ul>
-            <p className="mb-4">Even invisible characters like newlines (10) and carriage returns (13) have ASCII codes</p>
-            <p className="mb-4"><b>Why This Matters:</b> When we read a character, we can immediately convert it to its ASCII number. This number will be our "address" in the array.</p>
-            <p className="mt-4 mb-2"><b>What is an Array? Think of it as a Row of Mailboxes! 📬</b></p>
-            <p className="mb-2">An array is like a row of 256 numbered mailboxes (from 0 to 255). Each box can hold information about one character. The magic is that we can jump directly to any mailbox if we know its number:</p>
+
+            <div className="mb-6">
+              <h4 className="font-bold mb-2">1. Required Namespaces 📚</h4>
+              <p className="mb-2">First, we need to include the right tools. In C#, we do this with <code className="bg-gray-100 px-1">using</code> statements:</p>
+              <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                <code className="text-sm">
+                  using System;<br />
+                  using System.Collections; // Required for ArrayList<br />
+                  using System.IO;         // Required for File operations
+                </code>
+              </div>
+              <p className="text-sm text-gray-600 mb-4">The <code className="bg-gray-100 px-1">System.Collections</code> namespace gives us access to ArrayList, our dynamic storage container.</p>
+            </div>
+
+            <div className="mb-6">
+              <h4 className="font-bold mb-2">2. ArrayList Basics 📦</h4>
+              <p className="mb-2">ArrayList is like a smart container that:</p>
+              <ul className="list-disc list-inside pl-4 mb-4">
+                <li>Grows automatically when you add items</li>
+                <li>Can store any type of object</li>
+                <li>Provides methods like Add() and IndexOf()</li>
+              </ul>
+              <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                <p className="text-sm"><strong>🔍 How we use it:</strong> We create an ArrayList to store CharacterFrequency objects, one for each unique character we find.</p>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h4 className="font-bold mb-2">3. Special ASCII Handling 🔍</h4>
+              <p className="mb-2">In this implementation, we need to handle ASCII characters differently based on their values:</p>
+              <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                <h5 className="font-semibold mb-2">Control Characters (ASCII 0-31):</h5>
+                <ul className="list-disc list-inside pl-4 mb-2 text-gray-600">
+                  <li>Examples: newline (10), carriage return (13)</li>
+                  <li>Display format: (ASCII_VALUE) [tab] frequency</li>
+                  <li>Example output: (10) 1</li>
+                </ul>
+                <h5 className="font-semibold mb-2 mt-4">Printable Characters (ASCII 32-127):</h5>
+                <ul className="list-disc list-inside pl-4 text-gray-600">
+                  <li>Examples: letters, numbers, punctuation</li>
+                  <li>Display format: CHARACTER(ASCII_VALUE) [tab] frequency</li>
+                  <li>Example output: A(65) 1</li>
+                </ul>
+              </div>
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-sm"><strong>Implementation Note:</strong> This special handling is managed in the CharacterFrequency class's ToString() method, which formats the output differently based on the character's ASCII value.</p>
+              </div>
+            </div>
+            <p className="mb-4"><b>Why This Matters:</b> When we read a character, we need to store both the character and how many times it appears. The ASCII value helps us identify each character uniquely.</p>
+            <p className="mt-4 mb-2"><b>How ArrayList Works: Think of it as a Smart Post Office! 📬</b></p>
+            <p className="mb-2">Unlike a fixed row of mailboxes (array), ArrayList is like a post office that creates new mailboxes only when needed. Here's how it works:</p>
             <ul className="list-disc list-inside pl-4 mb-2">
-              <li>Need box #65? Go straight to it! (That's where 'A' lives)</li>
-              <li>Want to check box #97? Jump right there! (That's 'a')</li>
+              <li>When a new character arrives, we check if it has a mailbox (using IndexOf)</li>
+              <li>If found, we update its frequency count</li>
+              <li>If not found, we create a new mailbox (using Add)</li>
             </ul>
-            <p className="mb-4">This direct jumping is called <b>O(1) access</b> - it's super fast because no matter how many mailboxes you have, you can get to any specific one in the same amount of time.</p>
+            <div className="bg-blue-50 p-4 rounded-lg mb-4">
+              <p className="mb-2"><strong>🔍 Performance Note:</strong></p>
+              <ul className="list-disc list-inside pl-4">
+                <li>Finding a character: O(n) - we need to check existing entries</li>
+                <li>Adding a new character: O(1) - just add to the end</li>
+                <li>Memory usage: Only stores characters that actually appear!</li>
+              </ul>
+            </div>
 
             <h3 className="font-bold mt-4">Breaking Down the Problem</h3>
             <p className="mb-2">Let's break this assignment into smaller steps:</p>
             <ol className="list-decimal list-inside pl-4 mb-4">
-              <li>Create a new project in VS</li>
-              <li>Add text file</li>
-              <li>Create a class to track character information (the CharacterFrequency class)</li>
-              <li>Set up an array to store all possible ASCII characters (0-255)</li>
-              <li>Read the input file one byte at a time</li>
-              <li>Count character frequencies by updating the array</li>
-              <li>Write the results to an output file in ASCII order</li>
+              <li>Create a new C# Console Application in Visual Studio</li>
+              <li>Add the required using statements (System.Collections for ArrayList)</li>
+              <li>Create the CharacterFrequency class with proper comparison methods</li>
+              <li>Initialize an ArrayList to store our character data</li>
+              <li>Set up command-line argument handling</li>
+              <li>Read the input file character by character with StreamReader</li>
+              <li>Process each character:
+                <ul className="list-none ml-8 mt-1 text-gray-600">
+                  <li>- Search ArrayList for existing character</li>
+                  <li>- Update frequency if found</li>
+                  <li>- Add new entry if not found</li>
+                </ul>
+              </li>
+              <li>Write results to both console and output file</li>
             </ol>
 
         <section className="mt-8">
@@ -1138,10 +1203,10 @@ a(97)   198124
                 <h3 className="text-xl font-semibold mt-6 mb-3">Whats Next?</h3>
                 <p className="mb-2">Your code isn’t just functional – it’s the foundation of what’s next! With knowledge in ASCII manipulation and data processing, the possibilities are endless.</p>
                 <p className="mb-2 font-semibold">What will you build?</p>
-                <ul className="list-disc list-inside pl-4 mb-4">
-                  <li>A password strength checker (analyzing character diversity)??</li>
-                  <li>A Caesar cipher encoder (shifting ASCII values)??</li>
-                  <li>The possibilities are endless!</li>
+                <ul className="list-none ml-6 mt-1 text-gray-600">
+                  <li>• Format: Character(ASCII) [tab] Frequency</li>
+                  <li>• Example: H(72) [tab] 1</li>
+                  <li>• Special handling for control characters (ASCII values 0-31)</li>
                 </ul>
 
                 <p className="text-center mt-8 text-lg font-semibold">Happy coding! 🚀 Let your array adventures begin!</p>
