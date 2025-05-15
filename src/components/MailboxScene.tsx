@@ -1,143 +1,12 @@
-import React, { useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Text } from '@react-three/drei';
-import * as THREE from 'three';
+import React from 'react';
+import GetCharacterMailbox from './GetCharacterMailbox';
+import SetCharacterMailbox from './SetCharacterMailbox';
 
 interface MailboxSceneProps {
   activeMethod: string | null;
 }
 
-function Mailbox({ position, isOpen, letter }: {
-  position: [number, number, number];
-  isOpen: boolean;
-  letter?: { position: [number, number, number]; isMoving: boolean; }
-}) {
-  const meshRef = useRef<THREE.Group>(null!);
-  const letterRef = useRef<THREE.Group>(null!);
-  const flagRef = useRef<THREE.Mesh>(null!);
-  
-  // Animate letter movement and flag
-  useFrame((state, delta) => {
-    if (letterRef.current && letter?.isMoving) {
-      // Move letter out when mailbox is open
-      const startZ = 0.65; // Just behind the front panel (0.7)
-      const endZ = 2.5;    // Further outside mailbox
-      const targetZ = isOpen ? endZ : startZ;
-      
-      // Limit how far back the letter can go
-      const minZ = 0.65; // Never go further back than this
-      
-      const newZ = THREE.MathUtils.lerp(
-        letterRef.current.position.z,
-        targetZ,
-        0.1
-      );
-      
-      // Ensure letter doesn't go too far back
-      letterRef.current.position.z = Math.max(newZ, minZ);
-
-      // Add slight wobble when moving
-      if (isOpen) {
-        letterRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 2) * 0.1;
-      }
-    }
-
-    if (flagRef.current) {
-      // Animate flag based on mailbox state
-      const targetRotation = isOpen ? -Math.PI / 4 : 0;
-      flagRef.current.rotation.z = THREE.MathUtils.lerp(
-        flagRef.current.rotation.z,
-        targetRotation,
-        0.1
-      );
-    }
-  });
-
-  return (
-    <group position={position}>
-      {/* Post */}
-      <mesh position={[0, -1.5, -0.2]}>
-        <boxGeometry args={[0.2, 3, 0.2]} />
-        <meshStandardMaterial color="#4a5568" />
-      </mesh>
-
-      {/* Main mailbox body */}
-      <group position={[0, 0, 0]} rotation={[0, -Math.PI * 0.1, 0]}>
-        {/* Main body - front section */}
-        <mesh position={[0, 0.3, 0.35]}>
-          <boxGeometry args={[0.9, 0.7, 0.7]} />
-          <meshStandardMaterial color="#4299E1" />
-        </mesh>
-
-        {/* Main body - back section */}
-        <mesh position={[0, 0.3, -0.4]}>
-          <boxGeometry args={[0.9, 0.7, 1.2]} />
-          <meshStandardMaterial color="#4299E1" />
-        </mesh>
-
-        {/* Front panel (darker) */}
-        <mesh position={[0, 0.3, 0.7]}>
-          <boxGeometry args={[0.8, 0.6, 0.02]} />
-          <meshStandardMaterial color="#2B6CB0" />
-        </mesh>
-
-
-
-        {/* Flag */}
-        <group position={[0.45, 0.3, 0]}>
-          {/* Pole */}
-          <mesh position={[0, 0.2, 0]}>
-            <boxGeometry args={[0.05, 0.4, 0.05]} />
-            <meshStandardMaterial color="#4a5568" />
-          </mesh>
-          {/* Flag part */}
-          <mesh 
-            ref={flagRef}
-            position={[0.15, 0.3, 0]}
-          >
-            <boxGeometry args={[0.25, 0.2, 0.02]} />
-            <meshStandardMaterial color="#e53e3e" />
-          </mesh>
-        </group>
-      </group>
-
-      {/* Letter */}
-      {letter && (
-        <group
-          position={[0.2, 0.3, 0.65]}
-          rotation={[0, 0, 0]}
-          ref={letterRef}
-        >
-          <group rotation={[0, Math.PI / 2, 0]}>
-            {/* Envelope base */}
-            <mesh position={[0, 0, -0.2]}>
-              <boxGeometry args={[0.8, 0.6, 0.02]} />
-              <meshStandardMaterial color="#f7fafc" />
-            </mesh>
-
-
-
-            {/* Stamp */}
-            <mesh position={[0.25, 0.15, -0.19]}>
-              <boxGeometry args={[0.2, 0.2, 0.01]} />
-              <meshStandardMaterial color="#cbd5e0" />
-            </mesh>
-
-            {/* Address lines */}
-            <mesh position={[0, 0, -0.19]}>
-              <boxGeometry args={[0.6, 0.03, 0.01]} />
-              <meshStandardMaterial color="#a0aec0" />
-            </mesh>
-            <mesh position={[0, -0.1, -0.19]}>
-              <boxGeometry args={[0.6, 0.03, 0.01]} />
-              <meshStandardMaterial color="#a0aec0" />
-            </mesh>
-          </group>
-        </group>
-      )}
-    </group>
-  );
-}
+// Method-specific animation components are imported at the top of the file
 
 export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
   const getMethodDescription = () => {
@@ -169,12 +38,17 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
     }
   };
 
-  // Determine mailbox states based on active method
-  const mailboxStates = {
-    getChar: {
-      isOpen: activeMethod === 'getCharacter(): char',
-      hasLetter: true,
-      position: [1, 0.2, -0.8] as [number, number, number]
+  // Determine which method animation to display
+  const renderMethodAnimation = () => {
+    switch (activeMethod) {
+      case 'getCharacter(): char':
+        return <GetCharacterMailbox isActive={true} />;
+      case 'setCharacter(char)':
+        return <SetCharacterMailbox isActive={true} />;
+      default:
+        return <div className="w-full h-full flex items-center justify-center bg-gray-100">
+          <p className="text-gray-500">Select a method to see its animation</p>
+        </div>;
     }
   };
 
@@ -183,23 +57,7 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
   return (
     <div className="flex flex-col space-y-4">
       <div className="w-full h-[300px] border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
-        <Canvas camera={{ position: [2, 2, 5], fov: 50 }}>
-          <ambientLight intensity={0.5} />
-          <pointLight position={[5, 5, 5]} intensity={0.8} />
-          <pointLight position={[-5, 2, -2]} intensity={0.5} color="#ffffff" />
-
-          {/* Mailboxes */}
-          {Object.entries(mailboxStates).map(([key, state]) => (
-            <Mailbox
-              key={key}
-              position={state.position}
-              isOpen={state.isOpen}
-              letter={state.hasLetter ? { position: [0, 0, 0], isMoving: true } : undefined}
-            />
-          ))}
-
-          <OrbitControls enableZoom={true} enablePan={true} enableRotate={true} />
-        </Canvas>
+        {renderMethodAnimation()}
       </div>
 
       {/* Description of current action */}
