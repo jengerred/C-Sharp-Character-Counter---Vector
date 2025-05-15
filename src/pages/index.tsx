@@ -601,14 +601,14 @@ o(111) 1`}
   </div>
 </div>
 
-<p className="text-sm text-gray-600 mb-4">
-  The UML diagram above shows the complete structure of our CharacterFrequency class:
+<div className="text-sm text-gray-600 mb-4">
+  <p>The UML diagram above shows the complete structure of our CharacterFrequency class:</p>
   <ul className="list-disc list-inside pl-4 mt-2 space-y-1">
     <li>The top section shows the class name</li>
     <li>The middle section lists the private fields (marked with -)</li>
     <li>The bottom section shows all public methods (marked with +)</li>
   </ul>
-</p>
+</div>
 <div className="mt-4">
 <p className="mb-0"><b>Class Features</b></p>
 <ul className="list-disc list-inside pl-4 mb-8 space-y-1">

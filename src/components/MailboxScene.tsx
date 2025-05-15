@@ -20,15 +20,21 @@ function Mailbox({ position, isOpen, letter }: {
   useFrame((state, delta) => {
     if (letterRef.current && letter?.isMoving) {
       // Move letter out when mailbox is open
-      const startZ = 0.2; // Initial position inside mailbox
-      const endZ = 2.0; // Final position outside mailbox
+      const startZ = 0.65; // Just behind the front panel (0.7)
+      const endZ = 2.5;    // Further outside mailbox
       const targetZ = isOpen ? endZ : startZ;
       
-      letterRef.current.position.z = THREE.MathUtils.lerp(
+      // Limit how far back the letter can go
+      const minZ = 0.65; // Never go further back than this
+      
+      const newZ = THREE.MathUtils.lerp(
         letterRef.current.position.z,
         targetZ,
         0.1
       );
+      
+      // Ensure letter doesn't go too far back
+      letterRef.current.position.z = Math.max(newZ, minZ);
 
       // Add slight wobble when moving
       if (isOpen) {
@@ -56,7 +62,7 @@ function Mailbox({ position, isOpen, letter }: {
       </mesh>
 
       {/* Main mailbox body */}
-      <group position={[0, 0, 0]} rotation={[0, Math.PI / 4, 0]}>
+      <group position={[0, 0, 0]} rotation={[0, -Math.PI * 0.1, 0]}>
         {/* Main body - front section */}
         <mesh position={[0, 0.3, 0.35]}>
           <boxGeometry args={[0.9, 0.7, 0.7]} />
@@ -98,22 +104,18 @@ function Mailbox({ position, isOpen, letter }: {
       {/* Letter */}
       {letter && (
         <group
-          position={[0.35, 0.3, 0.2]}
-          rotation={[0, Math.PI / 4, 0]}
+          position={[0.2, 0.3, 0.65]}
+          rotation={[0, 0, 0]}
           ref={letterRef}
         >
-          <group rotation={[0, Math.PI/2, 0]}>
+          <group rotation={[0, Math.PI / 2, 0]}>
             {/* Envelope base */}
             <mesh position={[0, 0, -0.2]}>
               <boxGeometry args={[0.8, 0.6, 0.02]} />
               <meshStandardMaterial color="#f7fafc" />
             </mesh>
 
-            {/* Envelope flap */}
-            <mesh position={[0, 0.15, -0.2]} rotation={[isOpen ? -Math.PI/4 : 0, 0, 0]}>
-              <boxGeometry args={[0.8, 0.3, 0.02]} />
-              <meshStandardMaterial color="#edf2f7" />
-            </mesh>
+
 
             {/* Stamp */}
             <mesh position={[0.25, 0.15, -0.19]}>
@@ -160,7 +162,7 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
     getChar: {
       isOpen: activeMethod === 'getCharacter(): char',
       hasLetter: true,
-      position: [-1, 0, 0] as [number, number, number]
+      position: [1, 0.2, -0.8] as [number, number, number]
     }
   };
 
@@ -169,7 +171,7 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
   return (
     <div className="flex flex-col space-y-4">
       <div className="w-full h-[300px] border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
-        <Canvas camera={{ position: [2, 1, 2], fov: 50 }}>
+        <Canvas camera={{ position: [2, 2, 5], fov: 50 }}>
           <ambientLight intensity={0.5} />
           <pointLight position={[5, 5, 5]} intensity={0.8} />
           <pointLight position={[-5, 2, -2]} intensity={0.5} color="#ffffff" />
