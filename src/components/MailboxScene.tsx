@@ -50,16 +50,22 @@ function Mailbox({ position, isOpen, letter }: {
   return (
     <group position={position}>
       {/* Post */}
-      <mesh position={[0, -1.5, 0]}>
+      <mesh position={[0, -1.5, -0.2]}>
         <boxGeometry args={[0.2, 3, 0.2]} />
         <meshStandardMaterial color="#4a5568" />
       </mesh>
 
       {/* Main mailbox body */}
       <group position={[0, 0, 0]} rotation={[0, Math.PI / 4, 0]}>
-        {/* Main body */}
-        <mesh position={[0, 0.3, 0]}>
-          <boxGeometry args={[0.9, 0.7, 1.4]} />
+        {/* Main body - front section */}
+        <mesh position={[0, 0.3, 0.35]}>
+          <boxGeometry args={[0.9, 0.7, 0.7]} />
+          <meshStandardMaterial color="#4299E1" />
+        </mesh>
+
+        {/* Main body - back section */}
+        <mesh position={[0, 0.3, -0.4]}>
+          <boxGeometry args={[0.9, 0.7, 1.2]} />
           <meshStandardMaterial color="#4299E1" />
         </mesh>
 
