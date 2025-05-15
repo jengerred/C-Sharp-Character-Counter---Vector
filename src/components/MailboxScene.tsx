@@ -154,6 +154,12 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
           description: 'Similar to placing a new letter in the mailbox. This method updates the character that this object represents, replacing any previous character with the new one provided.',
           action: 'Placing new letter in mailbox...'
         };
+      case 'getFrequency(): int':
+        return {
+          title: 'Getting the Frequency',
+          description: 'Like checking how many identical letters are in the mailbox. This method returns the count of how many times this character appears in the text.',
+          action: 'Counting letters...'
+        };
       default:
         return {
           title: 'Interactive UML Visualization',
@@ -169,11 +175,6 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
       isOpen: activeMethod === 'getCharacter(): char',
       hasLetter: true,
       position: [1, 0.2, -0.8] as [number, number, number]
-    },
-    setChar: {
-      isOpen: activeMethod === 'setCharacter(char)',
-      hasLetter: true,
-      position: [-1, 0.2, -0.8] as [number, number, number]
     }
   };
 
