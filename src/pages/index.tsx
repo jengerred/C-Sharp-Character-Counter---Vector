@@ -457,125 +457,128 @@ o(111) 1`}
           </div>
           {/* Key Note section moved here */}
           <p className="mt-4"><b>Key Notes About Test Files</b></p>
-          <p className="mt-1"><b>1. <span className="btn-download" style={{ marginRight: '0.25rem' }}>hello.txt</span> Behavior</b></p>
-          <p>While the file appears to contain just "Hello.", text editors like Notepad automatically add:</p>
-          <ul className="list-disc list-inside pl-4 my-1">
-            <li><code>{String.raw`\r`}</code> (Carriage Return - ASCII 13)</li>
-            <li><code>{String.raw`\n`}</code> (Newline - ASCII 10)</li>
-          </ul>
-          <p>This explains why our earlier output example shows these characters.</p>
-            {/* Copied Show/Hide Output section starts here */}
-            <div className="mb-4">
-              <button 
-                onClick={() => setShowExampleOutput(!showExampleOutput)}
-                className="btn-green rounded transition"
-              >
-                {showExampleOutput ? 'Hide' : 'Show'} Output
-              </button>
-            </div>
-
-            {showExampleOutput && (
-              <div className="bg-[#1E1E1E] p-3 rounded-md">
-                <pre className="whitespace-pre-wrap break-all" style={{
-                  backgroundColor: 'black',
-                  color: '#EDEDED',
-                  fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-                  fontWeight: 'normal',
-                  fontSize: '0.875em',
-                  textShadow: 'none',
-                  padding: '1rem',
-                  borderRadius: '0.5rem'
-                }}>
-                  {`(10) 1
+          
+          <div className="space-y-4">
+            <div>
+              <p className="font-bold mb-2">1. Test Input Files</p>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="mb-4">
+                  <p className="mb-2"><b><span className="btn-download" style={{ marginRight: '0.25rem' }}>hello.txt</span></b> - Simple test case:</p>
+                  <ul className="list-disc list-inside pl-4">
+                    <li>Content appears as "Hello."</li>
+                    <li>Actually contains invisible characters:</li>
+                    <ul className="list-none ml-8">
+                      <li>- <code>{String.raw`\r`}</code> (Carriage Return - ASCII 13)</li>
+                      <li>- <code>{String.raw`\n`}</code> (Newline - ASCII 10)</li>
+                    </ul>
+                  </ul>
+                  <div className="mt-4">
+                    <button 
+                      onClick={() => setShowExampleOutput(!showExampleOutput)}
+                      className="btn-green rounded transition"
+                    >
+                      {showExampleOutput ? 'Hide' : 'Show'} Output
+                    </button>
+                    {showExampleOutput && (
+                      <div className="bg-[#1E1E1E] p-3 rounded-md mt-2">
+                        <pre className="whitespace-pre-wrap break-all" style={{
+                          backgroundColor: 'black',
+                          color: '#EDEDED',
+                          fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+                          fontWeight: 'normal',
+                          fontSize: '0.875em',
+                          textShadow: 'none',
+                          padding: '1rem',
+                          borderRadius: '0.5rem'
+                        }}>
+                          {`(10) 1
 (13) 1
 .(46) 1
 H(72) 1
 e(101) 1
 l(108) 2
 o(111) 1`}
-                </pre>
+                        </pre>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <p className="mb-2"><b><span className="btn-download" style={{ marginRight: '0.25rem' }}>wap.txt</span></b> - Complex test case:</p>
+                  <ul className="list-disc list-inside pl-4 mb-4">
+                    <li>Contains the full text of War and Peace (~500,000 words)</li>
+                    <li>Excellent test for ArrayList's dynamic sizing</li>
+                    <li>Rich variety of printable and control characters</li>
+                    <li>Perfect for testing performance with large datasets</li>
+                  </ul>
+
+                  <div className="space-y-4">
+                    <div>
+                      <p className="mb-2"><strong>Preview of wap.txt contents:</strong></p>
+                      <div style={{ 
+                        position: 'relative',
+                        height: '200px',
+                        overflow: 'auto',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '0.5rem'
+                      }}>
+                        <pre style={{ 
+                          whiteSpace: 'pre-wrap', 
+                          wordBreak: 'break-all', 
+                          fontFamily: 'monospace', 
+                          backgroundColor: 'white',
+                          userSelect: 'text',
+                          padding: '1rem',
+                          fontSize: '0.875em'
+                        }}>{fileContent.slice(0, 10000).replace(/\[NEWLINE\]/g, '\n')}</pre>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-end mb-2">
+                        <button 
+                          onClick={() => setShowCharacterFrequencies(!showCharacterFrequencies)}
+                          className="btn-green rounded transition"
+                        >
+                          {showCharacterFrequencies ? 'Hide' : 'View'} Expected Output
+                        </button>
+                      </div>
+                      {showCharacterFrequencies && characterFrequencies.length > 0 && (
+                        <div className="bg-[#1E1E1E] p-3 rounded-md">
+                          <pre className="whitespace-pre-wrap break-all" style={{
+                            backgroundColor: 'black',
+                            color: '#EDEDED',
+                            fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+                            fontWeight: 'normal',
+                            fontSize: '0.875em',
+                            textShadow: 'none',
+                            padding: '1rem',
+                            borderRadius: '0.5rem'
+                          }}>{characterFrequencies.map(freq => 
+                            `${freq.character === '\n' ? '\\n' : freq.character === '\r' ? '\\r' : freq.character === ' ' ? 'Space' : freq.character}(${freq.asciiCode}) ${freq.frequency}`
+                          ).join('\n')}</pre>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
-            {/* Copied Show/Hide Output section ends here */}
-            {/* New wap.txt Purpose section starts here */}
-            <p><b>2. <span className="btn-download" style={{ marginRight: '0.25rem' }}>wap.txt</span> Purpose</b></p>
-            <p>Contains the full text of War and Peace (~500,000 words) to:</p>
-            <ul className="list-disc list-inside pl-4 my-1 space-y-1">
-              <li>Test memory efficiency with large files</li>
-              <li>Verify consistent counting under heavy load</li>
-              <li>Demonstrate real-world character distributions</li>
-            </ul>
-            {/* New wap.txt Purpose section ends here */}
-
-</section>
-        <section className="mt-6">
-          <p><b>Large ASCII text file <span className="btn-download" style={{ marginLeft: '0.25rem', marginRight: '0.25rem' }}>wap.txt</span> Contents:</b></p>
-          <div style={{ 
-            position: 'relative', 
-            width: '100%', 
-            height: '12rem', 
-            border: '2px solid #9ca3af', 
-            borderRadius: '0.5rem', 
-            backgroundColor: 'white', 
-            overflow: 'hidden' 
-          }}>
-            <div style={{ 
-            position: 'absolute', 
-            inset: 0, 
-            overflowY: 'auto', 
-            padding: '1rem', 
-            backgroundColor: 'white' 
-          }}>
-              <pre style={{ 
-            fontSize: '0.875rem', 
-            color: 'black', 
-            whiteSpace: 'pre-wrap', 
-            wordBreak: 'break-all', 
-            fontFamily: 'monospace', 
-            backgroundColor: 'white',
-            userSelect: 'text' 
-          }}>{fileContent.slice(0, 10000).replace(/\[NEWLINE\]/g, '\n')}</pre>
             </div>
-            <div style={{ 
-            position: 'absolute', 
-            bottom: 0, 
-            left: 0, 
-            right: 0, 
-            height: '0.25rem', 
-            backgroundColor: 'white' 
-          }}></div>
+
+            <div>
+              <p className="font-bold mb-2">2. ArrayList Implementation</p>
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <ul className="list-disc list-inside space-y-2">
+                  <li>Dynamic sizing - grows as needed with Add() method</li>
+                  <li>Uses IndexOf() to search for existing characters</li>
+                  <li>Stores only characters that actually appear</li>
+                  <li>Maintains insertion order of characters</li>
+                </ul>
+              </div>
+            </div>
           </div>
-        </section>
+</section>
 
-        {fileContent && (
-          <section className="mt-6">
-            <div className="flex items-center justify-between mb-4">
-              <p><b>Character Frequency Analysis Output</b></p>
-              <button 
-                onClick={() => setShowCharacterFrequencies(!showCharacterFrequencies)}
-                className="btn-green"
-              >
-                {showCharacterFrequencies ? 'Hide' : 'View'} Expected Output
-              </button>
-            </div>
-            {showCharacterFrequencies && characterFrequencies.length > 0 && (
-               <div className="bg-[#1E1E1E] p-3 rounded-md">
-                 <pre className="whitespace-pre-wrap break-all" style={{
-                  backgroundColor: 'black',
-                  color: '#EDEDED',
-                  fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-                  fontWeight: 'normal',
-                  fontSize: '0.875em',
-                  textShadow: 'none',
-                  padding: '1rem',
-                  borderRadius: '0.5rem'
-                }}>{characterFrequencies.map((freq) => 
-                  `${freq.character === '\n' ? '\\n' : freq.character === '\r' ? '\\r' : freq.character === ' ' ? 'Space' : freq.character}(${freq.asciiCode}) ${freq.frequency}`
-                ).join('\n')}</pre>
-               </div>
-             )}
-          </section>
-        )}
 <h3 className="page-section-heading">The CharacterFrequency Class</h3>
 <p>The CharacterFrequency class is the core of our program, following the UML diagram specifications. Think of it as a smart counter that keeps track of both a character and how many times it appears. 📊</p>
 <div className="mt-4">
