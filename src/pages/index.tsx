@@ -5,6 +5,9 @@ import 'prismjs/themes/prism.css'; // Default light theme
 import 'prismjs/components/prism-csharp';
 import 'prismjs/components/prism-bash';
 import CodeBlock from '../components/CodeBlock';
+import CopyButton from '../components/CopyButton';
+import UMLClassDiagram from '../components/UMLClassDiagram';
+import MailboxScene from '../components/MailboxScene';
 
 interface CharacterFrequency {
   character: string;
@@ -21,6 +24,7 @@ export default function Home() {
   const [showDetailedSteps, setShowDetailedSteps] = useState(false);
   const [showAddInputFilesSteps, setShowAddInputFilesSteps] = useState(false);
   const [showRunProgramSteps, setShowRunProgramSteps] = useState(false);
+  const [activeMethod, setActiveMethod] = useState<string | null>(null);
 
   // Effect to highlight code blocks after component mounts/updates
   useEffect(() => {
@@ -580,7 +584,31 @@ o(111) 1`}
 </section>
 
 <h3 className="page-section-heading">The CharacterFrequency Class</h3>
-<p>The CharacterFrequency class is the core of our program, following the UML diagram specifications. Think of it as a smart counter that keeps track of both a character and how many times it appears. 📊</p>
+<p>The CharacterFrequency class is the core of our program, following the UML (Unified Modeling Language) diagram specifications. UML is a standardized modeling language that helps visualize the structure of our class, showing its fields, methods, and relationships. Below is an interactive 3D representation of our class diagram - you can rotate, zoom, and pan to explore it! 📊</p>
+
+<div className="my-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+  {/* Left side: Traditional UML Diagram */}
+  <div>
+    <UMLClassDiagram 
+      onMethodClick={(method) => setActiveMethod(method)}
+      activeMethod={activeMethod}
+    />
+  </div>
+
+  {/* Right side: Interactive Mailbox Scene */}
+  <div>
+    <MailboxScene activeMethod={activeMethod} />
+  </div>
+</div>
+
+<p className="text-sm text-gray-600 mb-4">
+  The UML diagram above shows the complete structure of our CharacterFrequency class:
+  <ul className="list-disc list-inside pl-4 mt-2 space-y-1">
+    <li>The top section shows the class name</li>
+    <li>The middle section lists the private fields (marked with -)</li>
+    <li>The bottom section shows all public methods (marked with +)</li>
+  </ul>
+</p>
 <div className="mt-4">
 <p className="mb-0"><b>Class Features</b></p>
 <ul className="list-disc list-inside pl-4 mb-8 space-y-1">
