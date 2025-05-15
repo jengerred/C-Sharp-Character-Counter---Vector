@@ -25,6 +25,11 @@ export default function Home() {
   const [showAddInputFilesSteps, setShowAddInputFilesSteps] = useState(false);
   const [showRunProgramSteps, setShowRunProgramSteps] = useState(false);
   const [activeMethod, setActiveMethod] = useState<string | null>(null);
+  
+  // Debug: Log when activeMethod changes
+  useEffect(() => {
+    console.log('Index page activeMethod changed to:', activeMethod);
+  }, [activeMethod]);
 
   // Effect to highlight code blocks after component mounts/updates
   useEffect(() => {

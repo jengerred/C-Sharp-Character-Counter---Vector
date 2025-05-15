@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import GetCharacterMailbox from './GetCharacterMailbox';
 import SetCharacterMailbox from './SetCharacterMailbox';
+import GetFrequencyMailbox from './GetFrequencyMailbox';
 
 interface MailboxSceneProps {
   activeMethod: string | null;
@@ -9,6 +10,7 @@ interface MailboxSceneProps {
 // Method-specific animation components are imported at the top of the file
 
 export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
+  console.log('Active method:', activeMethod);
   const getMethodDescription = () => {
     switch (activeMethod) {
       case 'getCharacter(): char':
@@ -40,12 +42,20 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
 
   // Determine which method animation to display
   const renderMethodAnimation = () => {
+    console.log('Rendering method animation for:', activeMethod);
+    
     switch (activeMethod) {
       case 'getCharacter(): char':
+        console.log('Rendering GetCharacterMailbox');
         return <GetCharacterMailbox isActive={true} />;
       case 'setCharacter(char)':
+        console.log('Rendering SetCharacterMailbox');
         return <SetCharacterMailbox isActive={true} />;
+      case 'getFrequency(): int':
+        console.log('Rendering GetFrequencyMailbox');
+        return <GetFrequencyMailbox isActive={true} />;
       default:
+        console.log('Rendering default case');
         return <div className="w-full h-full flex items-center justify-center bg-gray-100">
           <p className="text-gray-500">Select a method to see its animation</p>
         </div>;
