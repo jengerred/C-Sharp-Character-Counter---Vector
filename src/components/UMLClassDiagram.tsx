@@ -12,7 +12,7 @@ export default function UMLClassDiagram({ onMethodClick, activeMethod }: UMLClas
     'getFrequency(): int',
     'setFrequency(int)',
     'increment(): void',
-    'Equals(CharacterFrequency): bool',
+    'Equals(object): bool',
     'ToString(): string'
   ];
 

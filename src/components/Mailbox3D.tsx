@@ -5,10 +5,9 @@ import * as THREE from 'three';
 interface Mailbox3DProps {
   position: [number, number, number];
   isOpen: boolean;
-  letter?: { position: [number, number, number]; isMoving: boolean; };
 }
 
-const Mailbox3D: React.FC<Mailbox3DProps> = ({ position, isOpen, letter }) => {
+const Mailbox3D: React.FC<Mailbox3DProps> = ({ position, isOpen }) => {
   const meshRef = useRef<THREE.Group>(null!);
   const flagRef = useRef<THREE.Mesh>(null!);
   
@@ -26,7 +25,7 @@ const Mailbox3D: React.FC<Mailbox3DProps> = ({ position, isOpen, letter }) => {
   });
 
   return (
-    <group ref={meshRef} position={position}>
+    <group position={position}>
       {/* Post */}
       <mesh position={[0, -1.5, -0.2]}>
         <boxGeometry args={[0.2, 3, 0.2]} />

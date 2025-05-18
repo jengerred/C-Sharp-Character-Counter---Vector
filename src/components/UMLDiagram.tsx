@@ -115,7 +115,12 @@ export default function UMLDiagram() {
           setChar: { isOpen: true, hasLetter: true }
         }));
         break;
-      // Add other method handlers
+      case 'setFrequency(int)':
+        setMailboxStates(prev => ({
+          ...prev,
+          setFreq: { isOpen: true, hasLetter: false }
+        }));
+        break;
     }
   };
 
@@ -143,7 +148,7 @@ export default function UMLDiagram() {
                 { method: 'getFrequency(): int', y: 0.1 },
                 { method: 'setFrequency(int)', y: -0.1 },
                 { method: 'increment(): void', y: -0.3 },
-                { method: 'Equals(CharacterFrequency): bool', y: -0.5 }
+                { method: 'Equals(object): bool', y: -0.5 }
               ].map((item, i) => (
                 <Text
                   key={i}
@@ -211,7 +216,7 @@ export default function UMLDiagram() {
 function getMethodDescription(method: string): string {
   switch (method) {
     case 'getCharacter(): char':
-      return 'Retrieving a character from the mailbox - like checking what letter is stored.';
+      return 'Like checking how many identical letters are in the mailbox. This method sets the frequency of a character.';
     case 'setCharacter(char)':
       return 'Putting a new character in the mailbox - like delivering a new letter.';
     case 'getFrequency(): int':

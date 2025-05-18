@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import GetCharacterMailbox from './GetCharacterMailbox';
 import SetCharacterMailbox from './SetCharacterMailbox';
 import GetFrequencyMailbox from './GetFrequencyMailbox';
+import SetFrequencyMailbox from './SetFrequencyMailbox';
 
 interface MailboxSceneProps {
   activeMethod: string | null;
@@ -24,6 +25,12 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
           title: 'Setting a Character',
           description: 'Similar to placing a new letter in the mailbox. This method updates the character that this object represents, replacing any previous character with the new one provided.',
           action: 'Placing new letter in mailbox...'
+        };
+      case 'setFrequency(int)':
+        return {
+          title: 'Setting Frequency',
+          description: 'Sets how many times this character appears in the mailbox.',
+          action: 'Setting frequency...'
         };
       case 'getFrequency(): int':
         return {
@@ -51,6 +58,9 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
       case 'setCharacter(char)':
         console.log('Rendering SetCharacterMailbox');
         return <SetCharacterMailbox isActive={true} />;
+      case 'setFrequency(int)':
+        console.log('Rendering SetFrequencyMailbox');
+        return <SetFrequencyMailbox isActive={true} />;
       case 'getFrequency(): int':
         console.log('Rendering GetFrequencyMailbox');
         return <GetFrequencyMailbox isActive={true} />;
