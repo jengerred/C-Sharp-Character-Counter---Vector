@@ -198,25 +198,25 @@ function Mailbox({ position, isOpen, letters, showCount }: {
             anchorX="center"
             anchorY="middle"
           >
-            1 Gray Letter
+            Gray Letter (1)
           </Text>
           <Text
-            position={[0, -0.15, 0.03]}
+            position={[0, -0.2, 0.03]}
             fontSize={0.22}
-            color="#000000"
+            color="#dc2626"
             anchorX="center"
             anchorY="middle"
           >
-            2 Red Letters
+            Red Letter (2)
           </Text>
           <Text
-            position={[0, -0.4, 0.03]}
+            position={[0, -0.5, 0.03]}
             fontSize={0.22}
-            color="#000000"
+            color="#059669"
             anchorX="center"
             anchorY="middle"
           >
-            1 Green Letter
+            Green Letter (1)
           </Text>
         </group>
       )}

@@ -18,32 +18,46 @@ interface LetterProps {
 const SetFrequencyMailbox: React.FC<SetFrequencyMailboxProps> = ({ isActive }) => {
   console.log('Rendering SetFrequencyMailbox with isActive:', isActive);
   const [isOpen, setIsOpen] = useState(false);
-  const [showCount, setShowCount] = useState(false);
+  const [countText, setCountText] = useState("Green Letter (1)");
+  const [showCount, setShowCount] = useState(true); // Always show count
+
+  // Initialize refs and state
+  const greenLetterRef = useRef<THREE.Group>(null!);
+  const [letterPosition, setLetterPosition] = useState<[number, number, number]>([0.2, 0.3, 2.5]); // Start letter outside but near mailbox
 
   // Control the animation based on active state
   useEffect(() => {
     if (isActive) {
       console.log('SetFrequencyMailbox active, starting animation');
       setIsOpen(false);
-      setShowCount(false);
+      setShowCount(true);
       
       const timer1 = setTimeout(() => {
         setIsOpen(true);
       }, 500);
       
       const timer2 = setTimeout(() => {
-        setShowCount(true);
-      }, 1200);
+        setLetterPosition([0.5, 0.3, 0.65]); // Move letter to mailbox position, further right
+      }, 800); // 500ms for opening + 300ms delay
+      
+      const timer3 = setTimeout(() => {
+        setCountText("Green Letter (2)");
+      }, 900); // Slightly after letter starts moving
+      
+      const closeTimer = setTimeout(() => {
+        setIsOpen(false);
+      }, 3000);
       
       return () => {
-        // Clean up timers
         clearTimeout(timer1);
         clearTimeout(timer2);
+        clearTimeout(timer3);
+        clearTimeout(closeTimer);
       };
     } else {
-      // Reset animation state when component becomes inactive
       setIsOpen(false);
-      setShowCount(false);
+      setShowCount(true);
+      setCountText("Green Letter (1)");
     }
   }, [isActive]);
 
@@ -75,34 +89,36 @@ const SetFrequencyMailbox: React.FC<SetFrequencyMailboxProps> = ({ isActive }) =
     }
   ];
 
+
+
   // Control the animation based on active state
   useEffect(() => {
     if (isActive) {
-      // Reset animation state
-      setIsOpen(false);
-      setShowCount(false);
-      
-      // Animation sequence with timers
-      const timer1 = setTimeout(() => {
-        // First open the mailbox after a short delay
+      // Animation sequence for setting a character
+      // Phase 1: Open mailbox
+      const openTimer = setTimeout(() => {
         setIsOpen(true);
       }, 500);
       
-      const timer2 = setTimeout(() => {
-        // Show count after letters are visible
-        setShowCount(true);
-        // Count display will stay visible permanently
-      }, 1200);
+      // Phase 2: Move letter into mailbox (shortly after opening)
+      const moveLetterTimer = setTimeout(() => {
+        setLetterPosition([0.2, 0.3, 0.65]); // Move letter to mailbox position
+      }, 800); // 500ms for opening + 300ms delay
+      
+      // Phase 3: Close mailbox (letter is now inside)
+      const closeTimer = setTimeout(() => {
+        setIsOpen(false);
+      }, 3000);
       
       return () => {
-        // Clean up timers
-        clearTimeout(timer1);
-        clearTimeout(timer2);
+        clearTimeout(openTimer);
+        clearTimeout(moveLetterTimer);
+        clearTimeout(closeTimer);
       };
     } else {
       // Reset animation state when component becomes inactive
       setIsOpen(false);
-      setShowCount(false);
+      setLetterPosition([0.2, 0.3, 2.5]); // Reset letter position
     }
   }, [isActive]);
 
@@ -116,11 +132,12 @@ const SetFrequencyMailbox: React.FC<SetFrequencyMailboxProps> = ({ isActive }) =
           <Mailbox3D
             position={[0, 0, 0]}
             isOpen={isOpen}
+            letter={{ position: letterPosition, isMoving: true }}
           />
 
           {/* Letters */}
           <group position={[0, 0.3, 0.35]} rotation={[0, -Math.PI * 0.1, 0]}>
-            {letters.map((letter, index) => (
+            {letters.map((letter) => (
               <group
                 key={letter.id}
                 position={letter.position}
@@ -134,7 +151,7 @@ const SetFrequencyMailbox: React.FC<SetFrequencyMailboxProps> = ({ isActive }) =
 
           {/* Count display */}
           {showCount && (
-            <group position={[-3.0, -1.5, 0.5]} rotation={[0, 0.5, 0]}>
+            <group position={[-3.0, 0.7, 0.5]} rotation={[0, 0.5, 0]}>
               <mesh position={[0, 0, 0]}>
                 <boxGeometry args={[1.8, 1.4, 0.05]} />
                 <meshBasicMaterial color="#ffffff" />
@@ -157,7 +174,26 @@ const SetFrequencyMailbox: React.FC<SetFrequencyMailboxProps> = ({ isActive }) =
                 anchorX="center"
                 anchorY="middle"
               >
-                1 Gray Letter
+                Gray Letter (1)
+              </Text>
+              <Text
+                position={[0, -0.2, 0.03]}
+                fontSize={0.22}
+                color="#dc2626"
+                anchorX="center"
+                anchorY="middle"
+              >
+                Red Letter (2)
+              </Text>
+              <Text
+                position={[0, -0.5, 0.03]}
+                fontSize={0.22}
+                color="#059669"
+                anchorX="center"
+                anchorY="middle"
+                fontWeight={countText === "Green Letter (2)" ? "bold" : "normal"}
+              >
+                {countText}
               </Text>
             </group>
           )}

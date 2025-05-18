@@ -29,8 +29,8 @@ export default function MailboxScene({ activeMethod }: MailboxSceneProps) {
       case 'setFrequency(int)':
         return {
           title: 'Setting Frequency',
-          description: 'Sets how many times this character appears in the mailbox.',
-          action: 'Setting frequency...'
+          description: 'Similar to adding another identical letter to the mailbox. This method increases the count of this character in the text by adding another letter to the mailbox.',
+          action: 'Adding another letter to the mailbox...'
         };
       case 'getFrequency(): int':
         return {
