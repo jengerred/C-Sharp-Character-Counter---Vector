@@ -617,44 +617,177 @@ o(111) 1`}
 <div className="mt-4">
 <p className="mb-0"><b>Class Features</b></p>
 <ul className="list-disc list-inside pl-4 mb-8 space-y-1">
-<li><b>Fields:</b> Character (ch) and frequency count</li>
-<li><b>Methods:</b> Getters/setters for both fields, increment counter, equals comparison, and string representation</li>
+<li><b>Fields:</b> Private fields _ch (character) and _frequency (count)</li>
+<li><b>Methods:</b> Getters/Setters (GetCharacter/SetCharacter), Increment, Equals override, ToString override</li>
 <li><b>Purpose:</b> Each instance represents one unique character and its count in the input file</li>
+<li><b>Storage:</b> Instances are stored in an ArrayList, allowing flexible storage of only characters that appear in the file</li>
 </ul>
 </div>
-<h3 className="page-section-heading">Code Walkthrough</h3>
+<h3 className="page-section-heading">CharacterFrequency Class Code Walkthrough</h3>
          <CodeBlock
               title="CharacterFrequency.cs"
               language="csharp"
               codeString={`public class CharacterFrequency
 {
-    private char ch;           // The character being counted
-    private int frequency;     // How many times it appears
+    // 📩 The letter in the mailbox (e.g., 'A')
+    private char _ch;           // The character being counted
+    
+    // 📩 📫 Number of letters in this mailbox
+    private int _frequency;     // How many times it appears
 
-    // Get/Set methods for the character
-    public char getCharacter() { return ch; }
-    public void setCharacter(char character) { ch = character; }
-
-    // Get/Set methods for the frequency
-    public int getFrequency() { return frequency; }
-    public void setFrequency(int freq) { frequency = freq; }
-
-    // Increment the frequency count
-    public void increment() { frequency++; }
-
-    // Compare two CharacterFrequency objects
-    public bool Equals(CharacterFrequency other)
+    // 📬 Constructor - creates a new Mailbox for the given letter
+    public CharacterFrequency(char character)
     {
-        return ch == other.ch;
+        // 📩 Store the letter in the mailbox
+        _ch = character;
+        // 📫 Start with 0 letters
+        _frequency = 0; 
     }
 
-    // Convert to string format
+    // 📩 Get/Set the letter in this mailbox
+    public char GetCharacter() => _ch;
+    public void SetCharacter(char character) => _ch = character;
+
+    // 📫 Get/Set how many letters are in this mailbox
+    public int GetFrequency() => _frequency;
+    public void SetFrequency(int frequency) => _frequency = frequency;
+
+    // 📩 Add another letter to this mailbox
+    public void Increment() => _frequency++;
+
+    // 📬 Check if two mailboxes contain the same letter
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || GetType() != obj.GetType()) return false;
+        CharacterFrequency other = (CharacterFrequency)obj;
+        return _ch == other._ch;
+    }
+
+    // 📬 Format the mailbox contents for delivery report
+    public override string ToString()
+    {
+        int asciiValue = (int)_ch;
+        string charDisplay = (asciiValue < 32 || asciiValue == 127) ? "" : _ch.ToString();
+        return (charDisplay == "")
+            ? $"        ({asciiValue})\t{_frequency}"      // 📬 Staff mailbox: show only number
+            : $"        {charDisplay}({asciiValue})\t{_frequency}"; // 📩 Public mailbox: show letter and number
+    }
     public override string ToString()
     {
         return $"{ch}({(int)ch}) {frequency}";
     }
 }`}
             />
+
+<div className="mt-6 mb-6">
+  <h4 className="font-bold mb-2">🔍 Breaking Down the CharacterFrequency Class</h4>
+  <p className="mb-4">Let's dive into each part of our CharacterFrequency class and understand why we need each component:</p>
+
+  <div className="bg-blue-50 p-4 rounded-lg mb-4">
+    <h5 className="font-semibold mb-2">1. The Fields (Private Members)</h5>
+    <CodeBlock
+      language="csharp"
+      codeString={`private char _ch;           // 📩 The letter in the mailbox
+      private int _frequency;     // 📫 Number of letters in this mailbox`}
+    />
+    <p className="mt-2">These are like the parts of a real mailbox:</p>
+    <ul className="list-disc list-inside pl-4 mb-2">
+      <li><code>_ch</code> - This is the letter that goes in the mailbox (like 'A' or 'B')</li>
+      <li><code>_frequency</code> - This counts how many letters of that type we have</li>
+    </ul>
+    <p className="text-sm">The <code>private</code> keyword means only our class can change these values - just like how only the post office can change what's in a real mailbox.</p>
+  </div>
+
+  <div className="bg-blue-50 p-4 rounded-lg mb-4">
+    <h5 className="font-semibold mb-2">2. The Constructor</h5>
+    <CodeBlock
+      language="csharp"
+      codeString={`public CharacterFrequency(char character)
+      {
+          _ch = character;
+          _frequency = 0; 
+      }`}
+    />
+    <p className="mt-2">Think of this like setting up a new mailbox:</p>
+    <ul className="list-disc list-inside pl-4 mb-2">
+      <li>It takes a character (like 'A') and creates a new mailbox for it</li>
+      <li>We start with 0 letters in the mailbox</li>
+    </ul>
+  </div>
+
+  <div className="bg-blue-50 p-4 rounded-lg mb-4">
+    <h5 className="font-semibold mb-2">3. The Getters and Setters</h5>
+    <CodeBlock
+      language="csharp"
+      codeString={`public char GetCharacter() => _ch;
+      public void SetCharacter(char character) => _ch = character;
+      public int GetFrequency() => _frequency;
+      public void SetFrequency(int frequency) => _frequency = frequency;`}
+    />
+    <p className="mt-2">These are like the post office rules:</p>
+    <ul className="list-disc list-inside pl-4 mb-2">
+      <li><code>GetCharacter()</code> - Shows what letter is in the mailbox</li>
+      <li><code>SetCharacter()</code> - Changes what letter is in the mailbox</li>
+      <li><code>GetFrequency()</code> - Shows how many letters are in the mailbox</li>
+      <li><code>SetFrequency()</code> - Changes how many letters are in the mailbox</li>
+    </ul>
+  </div>
+
+  <div className="bg-blue-50 p-4 rounded-lg mb-4">
+    <h5 className="font-semibold mb-2">4. The Increment Method</h5>
+    <CodeBlock
+      language="csharp"
+      codeString={`public void Increment() => _frequency++;`}
+    />
+    <p className="mt-2">This is like adding one more letter to the mailbox:</p>
+    <ul className="list-disc list-inside pl-4 mb-2">
+      <li>Every time we find the same letter in our file, we call this method</li>
+      <li>It increases the letter count by 1</li>
+    </ul>
+  </div>
+
+  <div className="bg-blue-50 p-4 rounded-lg mb-4">
+    <h5 className="font-semibold mb-2">5. The Equals Method</h5>
+    <CodeBlock
+      language="csharp"
+      codeString={`public override bool Equals(object? obj)
+      {
+          if (obj == null || GetType() != obj.GetType()) return false;
+          CharacterFrequency other = (CharacterFrequency)obj;
+          return _ch == other._ch;
+      }`}
+    />
+    <p className="mt-2">This is like checking if two mailboxes belong to the same letter:</p>
+    <ul className="list-disc list-inside pl-4 mb-2">
+      <li>When we get a new letter, we need to check if we already have a mailbox for it</li>
+      <li>We compare the letter in our mailbox with the letter in another mailbox</li>
+      <li>If they're the same letter, we return <code>true</code> (they're the same mailbox)</li>
+      <li>If they're different letters, we return <code>false</code> (they're different mailboxes)</li>
+    </ul>
+  </div>
+
+  <div className="bg-blue-50 p-4 rounded-lg">
+    <h5 className="font-semibold mb-2">6. The ToString Method</h5>
+    <CodeBlock
+      language="csharp"
+      codeString={`public override string ToString()
+      {
+          int asciiValue = (int)_ch;
+          string charDisplay = (asciiValue < 32 || asciiValue == 127) ? "" : _ch.ToString();
+          return (charDisplay == "")
+              ? $"        ({asciiValue})\t{_frequency}"      // 📬 Staff mailbox: show only number
+              : $"        {charDisplay}({asciiValue})\t{_frequency}"; // 📩 Public mailbox: show letter and number
+      }`}
+    />
+    <p className="mt-2">This is like writing a report about what's in the mailbox:</p>
+    <ul className="list-disc list-inside pl-4 mb-2">
+      <li>It shows both the letter and how many times it appears</li>
+      <li>For special letters (like newlines or tabs), it shows just the number</li>
+      <li>For normal letters, it shows both the letter and the number</li>
+    </ul>
+  </div>
+</div>
+
 <h3 className="page-section-heading">Command Line Usage</h3>
 <p>Our program is designed to be run from the command line with two parameters:</p>
 <pre className="bg-gray-800 text-white p-4 rounded-lg font-mono mb-4">programname.exe [input filename] [output filename]</pre>
@@ -936,100 +1069,181 @@ CharacterFrequency[] mailboxes = new CharacterFrequency[256];
 <CodeBlock
   language="csharp"
   codeString={`using System;
-using System.IO;
-using System.Text;
+using System.Collections; // Required for ArrayList
+using System.IO;         // Required for File operations
 
-public class CharacterFrequency
+namespace YourName_CharacterCounter_Vector
 {
-    public char Character { get; }      // Mailbox label (e.g., 'A')
-    public int Frequency { get; private set; } // Number of letters received
-
-    // When a new character arrives for the first time
-    public CharacterFrequency(char character)
+    // Represents a character and its frequency count
+    public class CharacterFrequency
     {
-        Character = character; // Create mailbox label
-        Frequency = 1;         // First letter arrives
-    }
+        private char _ch;       // The character being counted
+        private int _frequency; // Number of times the character appears
 
-    // Add another letter to this mailbox
-    public void Increment() => Frequency++; 
-}
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        // Check command-line arguments
-        if (args.Length != 2)
+        // Constructor - creates a new CharacterFrequency object for the given character
+        // The frequency starts at 0 and is incremented when the character is found
+        public CharacterFrequency(char character)
         {
-            Console.WriteLine("Usage: CharacterCounter_Tutorial.exe inputFile outputFile");
-            return;
+            _ch = character;
+            _frequency = 0; 
         }
 
-        string inputFile = args[0];   // Package to process
-        string outputFile = args[1];  // Delivery report file
+        // Gets the character
+        public char GetCharacter() => _ch;
 
-        CharacterFrequency[] mailboxes = new CharacterFrequency[256]; // Street with 256 mailboxes
-        // 📫[0] [1] [2] ... [255] (all empty at first)
+        // Sets the character
+        public void SetCharacter(char character) => _ch = character;
 
-        try
+        // Gets how many times the character appears
+        public int GetFrequency() => _frequency;
+
+        // Sets the frequency count for the character
+        public void SetFrequency(int frequency) => _frequency = frequency;
+
+        // Adds one to the frequency count
+        public void Increment() => _frequency++;
+
+        // Checks if two CharacterFrequency objects represent the same character
+        // Returns true if they have the same character, false otherwise
+        public override bool Equals(object? obj)
         {
-            // Open the mailbag (file)
-            using (FileStream mailbag = File.OpenRead(inputFile))
+            if (obj == null || GetType() != obj.GetType()) return false;
+            CharacterFrequency other = (CharacterFrequency)obj;
+            return _ch == other._ch;
+        }
+
+        // Returns a string in the format: Character(ASCIIValue)[tab]Frequency
+        // For control characters, only shows: (ASCIIValue)[tab]Frequency
+        public override string ToString()
+        {
+            int asciiValue = (int)_ch;
+            string charDisplay = (asciiValue < 32 || asciiValue == 127) ? "" : _ch.ToString();
+            return (charDisplay == "")
+                ? $"        ({asciiValue})\t{_frequency}"      // Control character: no char shown
+                : $"        {charDisplay}({asciiValue})\t{_frequency}"; // Printable character
+        }
+    }
+
+    // Main program class for counting character frequencies in a text file
+    class Program
+    {
+        // Main entry point - reads input file, counts characters, writes to output file
+        // Command line arguments: inputFile outputFile
+        static void Main(string[] args)
+        {
+            // Debug: Show current directory
+            Console.WriteLine($"Current Directory: {Environment.CurrentDirectory}");
+            Console.WriteLine($"Input file path: {args[0]}\n");
+            Console.WriteLine("\nVector - Character(ascii)  Frequency\n");
+
+            // Validate command-line arguments
+            if (args.Length < 2)
             {
-                int rawData;
-                // Process each letter one by one (until the bag is empty)
-                while ((rawData = mailbag.ReadByte()) != -1)
-                {
-                    char character = (char)rawData;       // 1. Read letter's address (convert byte to character)
-                    int mailboxNumber = (int)character;   // 2, Find mailbox number (ASCII value)
-
-                    // 3. Deliver to mailbox
-                    if (mailboxes[mailboxNumber] == null)
-                        mailboxes[mailboxNumber] = new CharacterFrequency(character); // New mailbox
-                    else
-                        mailboxes[mailboxNumber].Increment(); // Add to an existing mailbox
-                }
-            }       // Close mailbox automatically here
-                  
-
-            // Create delivery report
-            using (StreamWriter postmaster = new StreamWriter(outputFile))
-            {
-                // Walk down mailbox street (0-255)
-                for (int mailboxNumber = 0; mailboxNumber < 256; mailboxNumber++)
-                {
-                    if (mailboxes[mailboxNumber] != null)
-                    {
-                        var currentMailbox = mailboxes[mailboxNumber];
-                        
-                        // Staff mailboxes don't get public labels
-                        bool isControlCharacter = mailboxNumber < 32 || mailboxNumber == 127;
-                        string mailboxLabel = isControlCharacter 
-                            ? "" 
-                            : currentMailbox.Character.ToString();
-
-                        // Format: PublicLabel(Mailbox#)  Count | (Mailbox#)  Count
-                        string reportLine = (mailboxLabel == "")
-                            ? $"({mailboxNumber})\t{currentMailbox.Frequency}"  // Staff mailbox
-                            : $"{mailboxLabel}({mailboxNumber})\t{currentMailbox.Frequency}"; // Public
-
-                        postmaster.WriteLine(reportLine); // File report
-                        Console.WriteLine(reportLine);    // Display copy
-                    }
-                }
+                Console.WriteLine("Usage: YourName_CharacterCounter_Vector.exe <inputFile> <outputFile>");
+                Console.WriteLine("Example: YourName_CharacterCounter_Vector.exe wap.txt wap_output.txt");
+                return; // Exit if incorrect arguments are provided
             }
 
-           
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Postal Error: {ex.Message}");
+            string inputFile = args[0];
+            string outputFile = args[1];
 
+
+            // ArrayList to store CharacterFrequency objects, as required by the assignment for C#.
+            // ArrayList in C# is equivalent to vector in C++ or Vector in Java - all are dynamic array implementations.
+            // This approach uses a dynamic list (ArrayList) to store only the characters
+            // that actually appear in the input file. This differs from a strategy
+            // that might use a fixed-size array (e.g., size 256) to map directly to ASCII values.
+            // Using ArrayList allows for flexible storage and relies on the Equals() method
+            // of CharacterFrequency for finding existing characters.
+
+            ArrayList charFrequencies = new ArrayList();
+
+            try
+            {
+                // Step 1: Check if the input file exists
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Error: Input file '{inputFile}' not found.");
+                    return; // Exit if input file does not exist
+                }
+
+                // Step 2: Read the input file character by character
+                // Using statement ensures the StreamReader is properly disposed of
+                using (StreamReader reader = new StreamReader(inputFile))
+                {
+                    int charCode; // To store the integer representation of the character
+                    // Read characters until the end of the file is reached (reader.Read() returns -1)
+                    while ((charCode = reader.Read()) != -1) 
+                    {
+                        char character = (char)charCode; // Convert the integer back to a char
+                        
+                        // Create a temporary CharacterFrequency object for searching in the ArrayList
+                        CharacterFrequency tempCf = new CharacterFrequency(character);
+                        
+                        // Check if this character is already in our ArrayList.
+                        // This search is necessary because ArrayList does not allow direct indexing by character/ASCII value
+                        // in the same way a pre-sized array mapped to ASCII values would.
+                        // Instead, IndexOf() iterates and uses the Equals() method of CharacterFrequency.
+
+                        int index = charFrequencies.IndexOf(tempCf);
+
+                        if (index != -1)
+                        {
+                            // Character exists: retrieve it and increment its frequency
+                            CharacterFrequency existingCf = (CharacterFrequency)charFrequencies[index]!; // Non-null assertion
+                            existingCf.Increment();
+                        }
+                        else
+                        {
+                            // If the character is new, it's added to the ArrayList.
+                            // Unlike a fixed array indexed by ASCII, where all possible characters have a slot,
+                            // here we only store objects for characters encountered.
+                            tempCf.Increment(); 
+                            charFrequencies.Add(tempCf);
+                        }
+                    }
+                } // StreamReader is automatically closed here
+
+                // Step 3: Write the character frequencies to the output file
+                // Using statement ensures the StreamWriter is properly disposed of
+                using (StreamWriter writer = new StreamWriter(outputFile))
+                {
+                    writer.WriteLine("Vector - Character(ascii)  Frequency\n");
+
+                    // Iterate through the ArrayList and write each CharacterFrequency object
+                    // The ToString() method of CharacterFrequency handles the required output format
+                    foreach (CharacterFrequency cf in charFrequencies)
+                    {
+                        string line = cf.ToString();
+                        writer.WriteLine(line);    // Write to file
+                        Console.WriteLine(line);   // Display on console
+                    }
+                } // StreamWriter is automatically closed here
+
+                // Confirmation messages: Print results to console for quick viewing
+                Console.WriteLine("\n  * Note: Printed Count.txt file output to Console for Quick Viewing");
+                Console.WriteLine("  * Args: " + string.Join(", ", args));
+            }
+            catch (IOException ioEx)
+            {
+                // Handle file I/O specific errors
+                Console.WriteLine($"A file I/O error occurred: {ioEx.Message}");
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                // Handle errors related to file permissions
+                Console.WriteLine($"File access denied: {uaEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any other unexpected errors
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
+
+            // Keep console window open until user presses Enter
+            Console.ReadLine();
         }
-        Console.ReadLine(); // Pause console for review
     }
-
 }
 
 `}
